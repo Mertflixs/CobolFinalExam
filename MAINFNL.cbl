@@ -74,6 +74,8 @@
            PERFORM H900-CLOSE.
        MAIN-END. EXIT.
       *------------------------------------------------*
+      *PROGRAM PREPARATION PHASE
+      *------------------------------------------------*
        H100-INITIALIZE.
            OPEN INPUT INP-FILE.
            OPEN OUTPUT OUT-FILE.
@@ -84,6 +86,8 @@
            WRITE OUT-REC.
            READ INP-FILE.
        H100-END. EXIT.
+      *------------------------------------------------*
+      *FILE OPEN CONTROLL
       *------------------------------------------------*
        H101-INITIALIZE-CONT.
            IF (INP-ST NOT = 0) AND (INP-ST NOT = 97)
@@ -99,6 +103,8 @@
            END-IF.
        H101-END. EXIT.
       *------------------------------------------------*
+      *PROGRAM LIFE CIRCLE
+      *------------------------------------------------*
        H200-PROCESS.
            PERFORM H201-PROCESS-CONT.
            CALL WS-SUBFNL USING WS-SUB-AREA.
@@ -113,6 +119,8 @@
            READ INP-FILE.
        H200-END. EXIT.
       *------------------------------------------------*
+      *PROGRAM CONVERSION COMP-3 TO NUM
+      *------------------------------------------------*
        H201-PROCESS-CONT.
            IF (INP-ST NOT = 0) AND (INP-ST NOT = 97)
              DISPLAY 'INP-FILE READ ERROR: ' INP-ST
@@ -123,6 +131,8 @@
            COMPUTE WS-SUB-ID = FUNCTION NUMVAL(INP-ID).
            COMPUTE WS-SUB-DVZ = FUNCTION NUMVAL(INP-DVZ).
        H201-END. EXIT.
+      *------------------------------------------------*
+      *PROGRAM CLOSE
       *------------------------------------------------*
        H900-CLOSE.
            IF WS-SUB-OPEN

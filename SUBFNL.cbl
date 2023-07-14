@@ -11,9 +11,11 @@
                            ACCESS RANDOM
                            RECORD KEY IDX-KEY
                            STATUS IDX-ST.
-      *------------------------------------------------*
        DATA DIVISION.
        FILE SECTION.
+      *--------------------------------------------------*
+      *SUB-FRAME INP IDX-FILE FILE CONTENT
+      *--------------------------------------------------*
        FD IDX-FILE.
        01 IDX-REC.
            05 IDX-KEY.
@@ -23,8 +25,10 @@
            05 IDX-SURNAME      PIC X(15).
            05 IDX-DATE         PIC S9(7) COMP-3.
            05 IDX-BALANCE      PIC S9(15) COMP-3.
-      *-------------------------------------------------*
        WORKING-STORAGE SECTION.
+      *-------------------------------------------------*
+      *SUB-FRAME PROGRAM REQUIREMENTS USED
+      *--------------------------------------------------*
        01 WS-REC.
            05 I                PIC 9(2) VALUE 01.
            05 J                PIC 9(2) VALUE 01.
@@ -40,6 +44,8 @@
                88 WS-DELETE             VALUE 4.
                88 WS-READ               VALUE 5.
                88 WS-CLOSE              VALUE 9.
+      *--------------------------------------------------*
+      *SUB-FRAME INHERITANCE MAIN-FRAME
       *--------------------------------------------------*
        LINKAGE SECTION.
        01  LK-REC.
@@ -58,6 +64,8 @@
        0000-MAIN.
            PERFORM 1000-INITIALIZE.
        0000-END. EXIT.
+      *--------------------------------------------------*
+      *SUB-FRAME LIFE CIRCLE
       *--------------------------------------------------*
        1000-INITIALIZE.
            MOVE SPACES TO LK-DATA.
@@ -80,6 +88,8 @@
            END-EVALUATE.
        1000-END. EXIT.
       *--------------------------------------------------*
+      *PROGRAM READ AND CONTROL FUNCTION
+      *--------------------------------------------------*
        1001-READ-CONT.
            MOVE LK-ID TO IDX-ID.
            MOVE LK-DVZ TO IDX-DVZ.
@@ -95,6 +105,8 @@
            MOVE IDX-ST TO LK-RC.
        1001-END. EXIT.
       *--------------------------------------------------*
+      *SUB-FRAME OPEN FILE FUNCTION
+      *--------------------------------------------------*
        2000-OPEN.
            OPEN I-O IDX-FILE.
            IF (IDX-ST NOT = 0) AND (IDX-ST NOT = 97)
@@ -104,6 +116,8 @@
            END-IF.
            GOBACK.
        2000-END. EXIT.
+      *--------------------------------------------------*
+      *SUB-FRAME WRITE NEW USER IN FILE FUNCTION
       *--------------------------------------------------*
        3000-WRITE.
            MOVE LK-ID TO IDX-ID.
@@ -133,6 +147,8 @@
            GOBACK.
        3000-END. EXIT.
       *--------------------------------------------------*
+      *SUB-FRAME USER UPDATED IN FILE FUNCTION
+      *--------------------------------------------------*
        4000-UPDATE.
            PERFORM 1001-READ-CONT
            MOVE IDX-NAME TO LK-NAME-FROM
@@ -157,6 +173,8 @@
            GOBACK.
        4000-END. EXIT.
       *--------------------------------------------------*
+      *SUB-FRAME DELETE USER IN FILE FUNCTION
+      *--------------------------------------------------*
        5000-DELETE.
            PERFORM 1001-READ-CONT
            DELETE IDX-FILE.
@@ -166,6 +184,8 @@
            GOBACK.
        5000-END. EXIT.
       *--------------------------------------------------*
+      *SUB-FRAME READ USER IN FILE FUNCTION
+      *--------------------------------------------------*
        6000-READ.
            PERFORM 1001-READ-CONT
            MOVE 'READ SUCCESSFULLY' TO LK-WRONG-EXP.
@@ -173,6 +193,8 @@
            MOVE IDX-SURNAME TO LK-SNAME-FROM
            GOBACK.
        6000-END. EXIT.
+      *--------------------------------------------------*
+      *SUB-FRAME CLOSE FUNCTION
       *--------------------------------------------------*
        7000-CLOSE.
            CLOSE IDX-FILE.
